@@ -18,7 +18,7 @@ const AdminMessages = ({ showToast, onUnreadChange }) => {
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => { fetchMessages(); }, [fetchMessages]);
 

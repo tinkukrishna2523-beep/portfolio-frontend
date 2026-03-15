@@ -22,9 +22,9 @@ const AdminAbout = ({ showToast }) => {
       setMilestones(data.milestones || []);
       setHobbies(data.hobbies || []);
       setSkills(data.skills || []);
-    }).catch(() => showToast('Failed to load about data', 'error'))
+    }).catch(() => {})
       .finally(() => setLoading(false));
-  }, []);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const set = (k, v) => setAbout(p => ({ ...p, [k]: v }));
 
