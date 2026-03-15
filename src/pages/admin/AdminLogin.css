@@ -1,0 +1,125 @@
+.admin-login {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--gray-50);
+  padding: 24px;
+}
+
+.admin-login__box {
+  background: var(--white);
+  border: 1px solid var(--gray-200);
+  border-radius: 16px;
+  padding: 48px 40px;
+  width: 100%;
+  max-width: 420px;
+  box-shadow: var(--shadow-md);
+  text-align: center;
+}
+
+.admin-login__logo {
+  margin-bottom: 20px;
+}
+
+.admin-login__box h1 {
+  font-size: 24px;
+  color: var(--gray-900);
+  margin-bottom: 8px;
+}
+
+.admin-login__box p {
+  font-size: 14px;
+  color: var(--gray-500);
+  margin-bottom: 32px;
+}
+
+.admin-login__field {
+  text-align: left;
+  margin-bottom: 16px;
+}
+
+.admin-login__field label {
+  display: block;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--gray-700);
+  margin-bottom: 6px;
+}
+
+.admin-login__field input {
+  width: 100%;
+  padding: 12px 14px;
+  border: 1.5px solid var(--gray-200);
+  border-radius: 8px;
+  font-family: var(--font-body);
+  font-size: 15px;
+  color: var(--gray-800);
+  outline: none;
+  transition: border-color var(--transition), box-shadow var(--transition);
+}
+
+.admin-login__field input:focus {
+  border-color: var(--blue);
+  box-shadow: 0 0 0 3px rgba(0,102,255,0.1);
+}
+
+.admin-login__error {
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  border-radius: 8px;
+  padding: 10px 14px;
+  font-size: 13px;
+  color: #dc2626;
+  margin-bottom: 16px;
+  text-align: left;
+}
+
+.admin-login__btn {
+  width: 100%;
+  padding: 13px;
+  background: var(--blue);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-family: var(--font-body);
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--transition);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-bottom: 20px;
+}
+
+.admin-login__btn:hover:not(:disabled) {
+  background: var(--blue-light);
+  transform: translateY(-1px);
+}
+
+.admin-login__btn:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.spin {
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(255,255,255,0.3);
+  border-top-color: white;
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+  display: inline-block;
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.admin-login__back {
+  font-size: 13px;
+  color: var(--gray-400);
+  transition: color var(--transition);
+}
+
+.admin-login__back:hover { color: var(--blue); }

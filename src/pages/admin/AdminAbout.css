@@ -1,0 +1,281 @@
+/* About editor layout */
+.about-editor {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.about-loading {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* Section tab pills */
+.about-tabs {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  margin-bottom: 24px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid var(--gray-200);
+}
+
+.about-tab {
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  font-family: var(--font-body);
+  cursor: pointer;
+  border: 1.5px solid var(--gray-200);
+  background: var(--white);
+  color: var(--gray-600);
+  transition: all var(--transition);
+  white-space: nowrap;
+}
+
+.about-tab:hover {
+  border-color: var(--blue);
+  color: var(--blue);
+}
+
+.about-tab.active {
+  background: var(--blue);
+  color: var(--white);
+  border-color: var(--blue);
+}
+
+/* Panel */
+.about-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+/* Section */
+.about-section {
+  background: var(--white);
+  border: 1px solid var(--gray-200);
+  border-radius: 12px;
+  padding: 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.about-section__title {
+  font-size: 17px;
+  color: var(--gray-900);
+  margin: 0;
+}
+
+.about-section__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.about-section__hint {
+  font-size: 13px;
+  color: var(--gray-400);
+  margin-top: -10px;
+}
+
+/* Photo upload */
+.photo-upload {
+  display: flex;
+  gap: 28px;
+  align-items: flex-start;
+  padding: 20px;
+  background: var(--gray-50);
+  border: 1px solid var(--gray-200);
+  border-radius: 10px;
+}
+
+.photo-preview {
+  position: relative;
+  flex-shrink: 0;
+  width: 110px;
+  height: 110px;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 3px solid var(--gray-200);
+  background: var(--gray-100);
+}
+
+.photo-preview img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.photo-placeholder {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, #0066FF 0%, #003cb3 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-display);
+  font-size: 36px;
+  font-weight: 800;
+  color: white;
+}
+
+.photo-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.spin-lg {
+  width: 28px;
+  height: 28px;
+  border: 3px solid rgba(255,255,255,0.3);
+  border-top-color: white;
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+  display: inline-block;
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.photo-actions {
+  flex: 1;
+}
+
+.photo-actions h4 {
+  font-size: 15px;
+  color: var(--gray-900);
+  margin-bottom: 6px;
+}
+
+.photo-actions p {
+  font-size: 13px;
+  color: var(--gray-500);
+  line-height: 1.5;
+  margin-bottom: 14px;
+}
+
+.photo-btns {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.btn-danger-soft {
+  color: #dc2626 !important;
+  border-color: #fecaca !important;
+}
+
+.btn-danger-soft:hover {
+  background: #fef2f2 !important;
+  border-color: #dc2626 !important;
+}
+
+/* Milestone cards */
+.milestone-card {
+  background: var(--gray-50);
+  border: 1px solid var(--gray-200);
+  border-radius: 10px;
+  padding: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.milestone-card__top {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.milestone-idx {
+  font-size: 12px;
+  font-weight: 700;
+  font-family: var(--font-mono);
+  color: var(--gray-400);
+  background: var(--gray-200);
+  padding: 2px 7px;
+  border-radius: 4px;
+}
+
+/* Hobby edit cards */
+.hobbies-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 14px;
+}
+
+.hobby-edit-card {
+  background: var(--gray-50);
+  border: 1px solid var(--gray-200);
+  border-radius: 10px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.hobby-edit-card__top {
+  display: flex;
+  justify-content: flex-end;
+}
+
+/* Skills edit grid */
+.skills-edit-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 12px;
+}
+
+.skill-edit-card {
+  background: var(--gray-50);
+  border: 1px solid var(--gray-200);
+  border-radius: 8px;
+  padding: 12px;
+}
+
+.skill-del {
+  align-self: flex-end;
+  margin-bottom: 2px;
+  flex-shrink: 0;
+}
+
+/* Small button variant */
+.btn-sm {
+  padding: 7px 14px !important;
+  font-size: 13px !important;
+}
+
+/* Save bar */
+.about-save-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 16px 20px;
+  background: var(--gray-50);
+  border: 1px solid var(--gray-200);
+  border-radius: 10px;
+  position: sticky;
+  bottom: 20px;
+}
+
+.about-save-bar p {
+  font-size: 13px;
+  color: var(--gray-400);
+}
+
+@media (max-width: 768px) {
+  .about-tabs { gap: 4px; }
+  .about-tab  { font-size: 12px; padding: 6px 10px; }
+  .photo-upload { flex-direction: column; align-items: center; text-align: center; }
+  .photo-btns { justify-content: center; }
+  .about-save-bar { flex-direction: column; text-align: center; }
+}
