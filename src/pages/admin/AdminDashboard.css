@@ -592,3 +592,116 @@
   color: white !important;
   animation: pulse 2s infinite;
 }
+
+/* Project image upload */
+.proj-img-upload {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.proj-img-upload > label {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--gray-700);
+}
+
+.proj-img-area {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.proj-img-preview {
+  position: relative;
+  width: 100%;
+  height: 180px;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid var(--gray-200);
+}
+
+.proj-img-preview img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.proj-img-remove {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: rgba(0,0,0,0.6);
+  color: white;
+  border: none;
+  cursor: pointer;
+  font-size: 13px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background var(--transition);
+}
+
+.proj-img-remove:hover { background: #dc2626; }
+
+.proj-img-placeholder {
+  width: 100%;
+  height: 140px;
+  border: 2px dashed var(--gray-200);
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  cursor: pointer;
+  transition: all var(--transition);
+  background: var(--gray-50);
+}
+
+.proj-img-placeholder:hover {
+  border-color: var(--blue);
+  background: rgba(0,102,255,0.03);
+}
+
+.proj-img-placeholder span { font-size: 28px; }
+.proj-img-placeholder p { font-size: 14px; color: var(--gray-600); font-weight: 500; }
+.proj-img-placeholder small { font-size: 12px; color: var(--gray-400); }
+
+.proj-img-note {
+  background: rgba(0,102,255,0.05);
+  border: 1px solid rgba(0,102,255,0.15);
+  border-radius: 8px;
+  padding: 10px 14px;
+  font-size: 13px;
+  color: var(--gray-600);
+}
+
+/* Thumbnail in project list */
+.admin-card__thumb {
+  width: 72px;
+  height: 56px;
+  border-radius: 6px;
+  overflow: hidden;
+  flex-shrink: 0;
+  border: 1px solid var(--gray-200);
+}
+
+.admin-card__thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.spin-lg {
+  width: 28px;
+  height: 28px;
+  border: 3px solid rgba(0,102,255,0.2);
+  border-top-color: var(--blue);
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+  display: inline-block;
+}

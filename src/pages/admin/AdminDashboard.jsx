@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import api from '../../api/client';
@@ -22,7 +22,9 @@ const Modal = ({ title, onClose, children }) => (
 );
 
 // ─── Project Form ────────────────────────────────
-const ProjectForm = ({ initial = {}, onSave, onCancel, saving }) => {
+const BACKEND = 'https://portfolio-backend-production-4203.up.railway.app';
+
+const ProjectForm = ({ initial = {}, onSave, onCancel, saving, onImageUpload, onImageRemove }) => {
   const [form, setForm] = useState({
     title: initial.title || '',
     description: initial.description || '',
@@ -32,6 +34,9 @@ const ProjectForm = ({ initial = {}, onSave, onCancel, saving }) => {
     source: initial.source || '',
     featured: initial.featured || false,
   });
+  const [uploadingImg, setUploadingImg] = useState(false);
+  const [currentImage, setCurrentImage] = useState(initial.image || '');
+  const imgInputRef = useRef();
 
   const set = (k, v) => setForm(p => ({ ...p, [k]: v }));
 
@@ -39,6 +44,42 @@ const ProjectForm = ({ initial = {}, onSave, onCancel, saving }) => {
     e.preventDefault();
     onSave(form);
   };
+
+  const handleImageUpload = async (e) => {
+    const file = e.target.files[0];
+    if (!file || !initial.id) return;
+    setUploadingImg(true);
+    const fd = new FormData();
+    fd.append('image', file);
+    try {
+      const res = await api.post(`/projects/${initial.id}/image`, fd, {
+        headers: { 'Content-Type': 'multipart/form-data' },
+      });
+      setCurrentImage(res.data.imageUrl);
+      onImageUpload && onImageUpload(initial.id, res.data.imageUrl);
+    } catch (err) {
+      alert(err.response?.data?.error || 'Image upload failed');
+    } finally {
+      setUploadingImg(false);
+      e.target.value = '';
+    }
+  };
+
+  const handleRemoveImage = async () => {
+    if (!initial.id) return;
+    if (!window.confirm('Remove this project image?')) return;
+    try {
+      await api.delete(`/projects/${initial.id}/image`);
+      setCurrentImage('');
+      onImageRemove && onImageRemove(initial.id);
+    } catch {
+      alert('Failed to remove image');
+    }
+  };
+
+  const imgSrc = currentImage
+    ? (currentImage.startsWith('http') ? currentImage : `${BACKEND}${currentImage}`)
+    : null;
 
   return (
     <form className="admin-form" onSubmit={handleSubmit}>
@@ -81,6 +122,42 @@ const ProjectForm = ({ initial = {}, onSave, onCancel, saving }) => {
             placeholder="https://github.com/..." type="url" />
         </div>
       </div>
+
+      {/* Project Image Upload — only for existing projects */}
+      {initial.id && (
+        <div className="proj-img-upload">
+          <label>Project Image</label>
+          <div className="proj-img-area">
+            {imgSrc ? (
+              <div className="proj-img-preview">
+                <img src={imgSrc} alt="Project" />
+                <button type="button" className="proj-img-remove" onClick={handleRemoveImage}>✕</button>
+              </div>
+            ) : (
+              <div className="proj-img-placeholder" onClick={() => imgInputRef.current?.click()}>
+                {uploadingImg ? <span className="spin-lg" /> : <><span>📷</span><p>Click to upload image</p><small>JPG, PNG, WebP — max 5MB</small></>}
+              </div>
+            )}
+            {!imgSrc && !uploadingImg && (
+              <button type="button" className="btn-admin-outline btn-sm"
+                onClick={() => imgInputRef.current?.click()} style={{ marginTop: '8px' }}>
+                📤 Upload Image
+              </button>
+            )}
+            <input ref={imgInputRef} type="file" accept="image/*"
+              style={{ display: 'none' }} onChange={handleImageUpload} />
+          </div>
+          <small style={{ color: 'var(--gray-400)', fontSize: '12px' }}>
+            💡 Save the project first, then upload an image
+          </small>
+        </div>
+      )}
+
+      {!initial.id && (
+        <div className="proj-img-note">
+          💡 <strong>Tip:</strong> Add the project first, then edit it to upload an image.
+        </div>
+      )}
 
       <label className="checkbox-label">
         <input type="checkbox" checked={form.featured} onChange={e => set('featured', e.target.checked)} />
@@ -354,6 +431,14 @@ const AdminDashboard = () => {
             <div className="admin-list">
               {projects.map(p => (
                 <div key={p.id} className="admin-card">
+                  {p.image && (
+                    <div className="admin-card__thumb">
+                      <img
+                        src={p.image.startsWith('http') ? p.image : `${BACKEND}${p.image}`}
+                        alt={p.title}
+                      />
+                    </div>
+                  )}
                   <div className="admin-card__left">
                     <div className="admin-card__info">
                       <h3>{p.title}</h3>
@@ -429,6 +514,14 @@ const AdminDashboard = () => {
             onSave={handleSaveProject}
             onCancel={() => setProjectModal(null)}
             saving={saving}
+            onImageUpload={(id, imageUrl) => {
+              setProjects(p => p.map(x => x.id === id ? { ...x, image: imageUrl } : x));
+              showToast('Image uploaded!');
+            }}
+            onImageRemove={(id) => {
+              setProjects(p => p.map(x => x.id === id ? { ...x, image: '' } : x));
+              showToast('Image removed.');
+            }}
           />
         </Modal>
       )}
