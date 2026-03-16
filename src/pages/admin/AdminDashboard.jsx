@@ -35,14 +35,23 @@ const ProjectForm = ({ initial = {}, onSave, onCancel, saving, onImageUpload, on
     featured: initial.featured || false,
   });
   const [uploadingImg, setUploadingImg] = useState(false);
+  const [uploadingShot, setUploadingShot] = useState(false);
   const [currentImage, setCurrentImage] = useState(initial.image || '');
+  const [screenshots, setScreenshots] = useState(initial.screenshots || []);
   const imgInputRef = useRef();
+  const shotInputRef = useRef();
 
   const set = (k, v) => setForm(p => ({ ...p, [k]: v }));
 
   const handleSubmit = (e) => {
     e.preventDefault();
     onSave(form);
+  };
+
+  const getImgSrc = (img) => {
+    if (!img) return null;
+    if (img.startsWith('http')) return img;
+    return `${BACKEND}${img}`;
   };
 
   const handleImageUpload = async (e) => {
@@ -67,7 +76,7 @@ const ProjectForm = ({ initial = {}, onSave, onCancel, saving, onImageUpload, on
 
   const handleRemoveImage = async () => {
     if (!initial.id) return;
-    if (!window.confirm('Remove this project image?')) return;
+    if (!window.confirm('Remove cover image?')) return;
     try {
       await api.delete(`/projects/${initial.id}/image`);
       setCurrentImage('');
@@ -77,9 +86,37 @@ const ProjectForm = ({ initial = {}, onSave, onCancel, saving, onImageUpload, on
     }
   };
 
-  const imgSrc = currentImage
-    ? (currentImage.startsWith('http') ? currentImage : `${BACKEND}${currentImage}`)
-    : null;
+  const handleScreenshotUpload = async (e) => {
+    const file = e.target.files[0];
+    if (!file || !initial.id) return;
+    setUploadingShot(true);
+    const fd = new FormData();
+    fd.append('screenshot', file);
+    try {
+      const res = await api.post(`/projects/${initial.id}/screenshots`, fd, {
+        headers: { 'Content-Type': 'multipart/form-data' },
+      });
+      setScreenshots(res.data.screenshots || []);
+    } catch (err) {
+      alert(err.response?.data?.error || 'Screenshot upload failed');
+    } finally {
+      setUploadingShot(false);
+      e.target.value = '';
+    }
+  };
+
+  const handleRemoveScreenshot = async (idx) => {
+    if (!initial.id) return;
+    if (!window.confirm('Remove this screenshot?')) return;
+    try {
+      const res = await api.delete(`/projects/${initial.id}/screenshots/${idx}`);
+      setScreenshots(res.data.screenshots || []);
+    } catch {
+      alert('Failed to remove screenshot');
+    }
+  };
+
+  const imgSrc = getImgSrc(currentImage);
 
   return (
     <form className="admin-form" onSubmit={handleSubmit}>
@@ -123,39 +160,56 @@ const ProjectForm = ({ initial = {}, onSave, onCancel, saving, onImageUpload, on
         </div>
       </div>
 
-      {/* Project Image Upload — only for existing projects */}
-      {initial.id && (
-        <div className="proj-img-upload">
-          <label>Project Image</label>
-          <div className="proj-img-area">
-            {imgSrc ? (
-              <div className="proj-img-preview">
-                <img src={imgSrc} alt="Project" />
-                <button type="button" className="proj-img-remove" onClick={handleRemoveImage}>✕</button>
-              </div>
-            ) : (
-              <div className="proj-img-placeholder" onClick={() => imgInputRef.current?.click()}>
-                {uploadingImg ? <span className="spin-lg" /> : <><span>📷</span><p>Click to upload image</p><small>JPG, PNG, WebP — max 5MB</small></>}
-              </div>
-            )}
-            {!imgSrc && !uploadingImg && (
-              <button type="button" className="btn-admin-outline btn-sm"
-                onClick={() => imgInputRef.current?.click()} style={{ marginTop: '8px' }}>
-                📤 Upload Image
-              </button>
-            )}
-            <input ref={imgInputRef} type="file" accept="image/*"
-              style={{ display: 'none' }} onChange={handleImageUpload} />
+      {/* Images — only for existing projects */}
+      {initial.id ? (
+        <>
+          {/* Cover Image */}
+          <div className="proj-img-upload">
+            <label>🖼 Cover Image <span>(shown as main project photo)</span></label>
+            <div className="proj-img-area">
+              {imgSrc ? (
+                <div className="proj-img-preview">
+                  <img src={imgSrc} alt="Cover" />
+                  <button type="button" className="proj-img-remove" onClick={handleRemoveImage} title="Remove">✕</button>
+                </div>
+              ) : (
+                <div className="proj-img-placeholder" onClick={() => imgInputRef.current?.click()}>
+                  {uploadingImg ? <span className="spin-lg" /> : <><span>🖼</span><p>Click to upload cover image</p><small>JPG, PNG, WebP — max 5MB</small></>}
+                </div>
+              )}
+              {!imgSrc && !uploadingImg && (
+                <button type="button" className="btn-admin-outline btn-sm"
+                  onClick={() => imgInputRef.current?.click()}>
+                  📤 Upload Cover
+                </button>
+              )}
+              <input ref={imgInputRef} type="file" accept="image/*"
+                style={{ display: 'none' }} onChange={handleImageUpload} />
+            </div>
           </div>
-          <small style={{ color: 'var(--gray-400)', fontSize: '12px' }}>
-            💡 Save the project first, then upload an image
-          </small>
-        </div>
-      )}
 
-      {!initial.id && (
+          {/* Screenshots */}
+          <div className="proj-img-upload">
+            <label>📸 Screenshots <span>(website photos shown in gallery)</span></label>
+            <div className="screenshots-grid">
+              {screenshots.map((s, i) => (
+                <div key={i} className="screenshot-thumb">
+                  <img src={getImgSrc(s)} alt={`Screenshot ${i+1}`} />
+                  <button type="button" className="proj-img-remove"
+                    onClick={() => handleRemoveScreenshot(i)}>✕</button>
+                </div>
+              ))}
+              <div className="screenshot-add" onClick={() => shotInputRef.current?.click()}>
+                {uploadingShot ? <span className="spin-lg" /> : <><span>+</span><p>Add Screenshot</p></>}
+              </div>
+            </div>
+            <input ref={shotInputRef} type="file" accept="image/*"
+              style={{ display: 'none' }} onChange={handleScreenshotUpload} />
+          </div>
+        </>
+      ) : (
         <div className="proj-img-note">
-          💡 <strong>Tip:</strong> Add the project first, then edit it to upload an image.
+          💡 <strong>Tip:</strong> Save the project first, then edit it to upload cover image and screenshots.
         </div>
       )}
 
