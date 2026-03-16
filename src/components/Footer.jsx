@@ -7,7 +7,7 @@ const Footer = () => {
   const [about, setAbout] = useState(null);
 
   useEffect(() => {
-    api.get('/about').then(r => setAbout(r.data.data)).catch(() => {});
+    api.get('/about').then(r => setAbout(r.data?.data || null)).catch(() => {});
   }, []);
 
   const email    = about?.email    || 'hello@tinkukrishna.com';

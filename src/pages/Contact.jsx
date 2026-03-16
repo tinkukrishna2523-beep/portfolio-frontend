@@ -9,7 +9,7 @@ const Contact = () => {
   });
 
   useEffect(() => {
-    api.get('/about').then(r => setAbout(r.data.data)).catch(() => {});
+    api.get('/about').then(r => setAbout(r.data?.data || null)).catch(() => {});
   }, []);
   const [status, setStatus] = useState(null); // 'sending' | 'success' | 'error'
   const [errorMsg, setErrorMsg] = useState('');

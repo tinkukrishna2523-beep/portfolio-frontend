@@ -9,7 +9,7 @@ const About = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    api.get('/about').then(r => setAbout(r.data.data))
+    api.get('/about').then(r => setAbout(r.data?.data || null))
       .finally(() => setLoading(false));
   }, []);
 

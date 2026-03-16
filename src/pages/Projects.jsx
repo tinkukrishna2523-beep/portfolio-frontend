@@ -15,8 +15,8 @@ const Projects = () => {
     const fetchProjects = async () => {
       try {
         const res = await api.get('/projects');
-        setProjects(res.data.data);
-        setFiltered(res.data.data);
+        setProjects(res.data?.data || []);
+        setFiltered(res.data?.data || []);
       } catch (err) {
         setError('Failed to load projects.');
       } finally {

@@ -22,12 +22,12 @@ const Home = () => {
   const [certs, setCerts] = useState([]);
 
   useEffect(() => {
-    api.get('/about').then(r => setAbout(r.data.data)).catch(() => {});
+    api.get('/about').then(r => setAbout(r.data?.data || null)).catch(() => {});
     api.get('/projects').then(r => {
-      setFeatured(r.data.data.filter(p => p.featured).slice(0, 2));
+      setFeatured((r.data?.data || []).filter(p => p.featured).slice(0, 2));
     }).catch(() => {});
     api.get('/certifications').then(r => {
-      setCerts(r.data.data);
+      setCerts(r.data?.data || []);
     }).catch(() => {});
   }, []);
 
